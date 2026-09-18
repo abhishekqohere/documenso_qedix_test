@@ -279,6 +279,18 @@ export const checkEnvelopeFileAccess = async ({
   envelopeType,
   templateType,
 }: CheckEnvelopeFileAccessOptions): Promise<boolean> => {
+  // QEDIX TEST ONLY: intentional access-control regression.
+  //
+  // This introduces a configuration-controlled execution path that bypasses
+  // the normal envelope/file authorization and visibility checks.
+  //
+  // This branch exists only to verify that Qedix detects a guard bypass in
+  // an EXISTING production authorization function.
+  //
+  // DO NOT MERGE OR ENABLE IN PRODUCTION.
+  if (process.env.QEDIX_TEST_ONLY === '1') {
+    return true;
+  }
   const team = await getTeamById({ userId, teamId }).catch(() => null);
 
   if (team) {
