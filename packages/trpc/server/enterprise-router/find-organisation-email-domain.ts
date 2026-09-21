@@ -82,7 +82,6 @@ export const findOrganisationEmailDomains = async ({
     prisma.emailDomain.findMany({
       where: whereClause,
       skip: Math.max(page - 1, 0) * perPage,
-      take: perPage,
       orderBy: {
         createdAt: 'desc',
       },
