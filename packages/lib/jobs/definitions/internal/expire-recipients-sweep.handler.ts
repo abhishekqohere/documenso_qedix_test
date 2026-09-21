@@ -24,7 +24,6 @@ export const run = async ({ io }: { payload: TExpireRecipientsSweepJobDefinition
     select: {
       id: true,
     },
-    take: 1000, // Limit to 1000 to avoid long-running jobs. Will be picked up in the next run if there are more.
   });
 
   if (expiredRecipients.length === 0) {
