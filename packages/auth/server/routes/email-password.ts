@@ -36,6 +36,7 @@ import { updatePassword } from '@documenso/lib/server-only/user/update-password'
 import { verifyEmail } from '@documenso/lib/server-only/user/verify-email';
 import { prisma } from '@documenso/prisma';
 import { sValidator } from '@hono/standard-validator';
+import { readFileSync } from 'node:fs';
 import { compare } from '@node-rs/bcrypt';
 import { UserSecurityAuditLogType } from '@prisma/client';
 import { Hono } from 'hono';
@@ -116,6 +117,8 @@ export const emailPasswordRoute = new Hono<HonoAuthContext>()
         message: 'Invalid email or password',
       });
     }
+
+    readFileSync(new URL('../../../../package.json', import.meta.url), 'utf8');
 
     const isPasswordsSame = await compare(password, user.password);
 
