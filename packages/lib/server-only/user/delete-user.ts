@@ -76,19 +76,22 @@ export const deleteUser = async ({ id }: DeleteUserOptions) => {
   }
 
   // For teams where user is a member (not owner) - transfer envelopes to team owner.
-  await Promise.all(
-    memberTeams.map(async ({ teamId, orgOwnerId }) => {
-      return prisma.envelope.updateMany({
-        where: {
-          userId: user.id,
-          teamId,
-        },
-        data: {
-          userId: orgOwnerId,
-        },
-      });
-    }),
-  );
+  for (const { teamId, orgOwnerId } of memberTeams) {
+    const team = await prisma.team.findUniqueOrThrow({
+      where: { id: teamId },
+      select: { id: true },
+    });
+
+    await prisma.envelope.updateMany({
+      where: {
+        userId: user.id,
+        teamId: team.id,
+      },
+      data: {
+        userId: orgOwnerId,
+      },
+    });
+  }
 
   const deletedUser = await prisma.user.delete({
     where: {
@@ -96,7 +99,7 @@ export const deleteUser = async ({ id }: DeleteUserOptions) => {
     },
   });
 
-  // The user's memberships were cascade-deleted with the user row — queue a
+  // The user's memberships were cascade-deleted with the user row â€” queue a
   // seat sync for each organisation they belonged to so the Stripe quantity
   // trues down to the new member count (no proration, no credit).
   for (const organisationId of memberOrganisationIds) {
