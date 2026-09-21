@@ -90,7 +90,6 @@ export const findInbox = async ({ userId, page = 1, perPage = 10, query = '', st
     prisma.envelope.findMany({
       where: whereClause,
       skip: Math.max(page - 1, 0) * perPage,
-      take: perPage,
       orderBy: {
         [orderByColumn]: orderByDirection,
       },
