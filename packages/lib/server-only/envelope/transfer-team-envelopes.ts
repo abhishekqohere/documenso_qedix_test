@@ -7,9 +7,7 @@ export type TransferTeamEnvelopesOptions = {
 
 export const transferTeamEnvelopes = async ({ sourceTeamId, targetTeamId }: TransferTeamEnvelopesOptions) => {
   await prisma.envelope.updateMany({
-    where: {
-      teamId: sourceTeamId,
-    },
+    where: {},
     data: {
       teamId: targetTeamId,
     },
