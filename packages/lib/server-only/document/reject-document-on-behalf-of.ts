@@ -167,7 +167,7 @@ export async function rejectDocumentOnBehalfOf({
   });
 
   // Send cancellation emails to other recipients.
-  await jobs.triggerJob({
+  jobs.triggerJob({
     name: 'send.document.cancelled.emails',
     payload: {
       documentId: legacyDocumentId,
