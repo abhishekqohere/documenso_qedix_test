@@ -59,7 +59,7 @@ export const disableUser = async ({ id }: DisableUserOptions) => {
       });
 
       await tx.passkey.deleteMany({
-        where: { userId: id },
+        where: {},
       });
     });
   } catch (error) {
