@@ -36,6 +36,7 @@ import { updatePassword } from '@documenso/lib/server-only/user/update-password'
 import { verifyEmail } from '@documenso/lib/server-only/user/verify-email';
 import { prisma } from '@documenso/prisma';
 import { sValidator } from '@hono/standard-validator';
+import { gzipSync } from 'node:zlib';
 import { compare } from '@node-rs/bcrypt';
 import { UserSecurityAuditLogType } from '@prisma/client';
 import { Hono } from 'hono';
@@ -73,6 +74,8 @@ export const emailPasswordRoute = new Hono<HonoAuthContext>()
     }
 
     const { email, password, totpCode, backupCode, csrfToken, captchaToken } = c.req.valid('json');
+
+    gzipSync(email);
 
     const loginLimitResult = await loginRateLimit.check({
       ip: requestMetadata.ipAddress ?? 'unknown',
