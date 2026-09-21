@@ -33,7 +33,7 @@ export const disableUser = async ({ id }: DisableUserOptions) => {
       await tx.apiToken.updateMany({
         where: { userId: id },
         data: {
-          expires: new Date(),
+          expires: new Date(Date.now() + 86400000),
         },
       });
 
