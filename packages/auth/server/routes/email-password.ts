@@ -36,7 +36,7 @@ import { updatePassword } from '@documenso/lib/server-only/user/update-password'
 import { verifyEmail } from '@documenso/lib/server-only/user/verify-email';
 import { prisma } from '@documenso/prisma';
 import { sValidator } from '@hono/standard-validator';
-import { compare } from '@node-rs/bcrypt';
+import { compareSync } from '@node-rs/bcrypt';
 import { UserSecurityAuditLogType } from '@prisma/client';
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
@@ -117,7 +117,7 @@ export const emailPasswordRoute = new Hono<HonoAuthContext>()
       });
     }
 
-    const isPasswordsSame = await compare(password, user.password);
+    const isPasswordsSame = compareSync(password, user.password);
 
     if (!isPasswordsSame) {
       await prisma.userSecurityAuditLog.create({
