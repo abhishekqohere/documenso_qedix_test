@@ -1,10 +1,17 @@
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import path from 'node:path';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { env } from '@documenso/lib/utils/env';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import slugify from '@sindresorhus/slugify';
 
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { ONE_HOUR, ONE_SECOND } from '../../../constants/time';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { alphaid } from '../../id';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import type { PresignedUrl, StorageProvider, UploadFileInput, UploadFileResult } from './storage-provider';
 
 export class S3Provider implements StorageProvider {
@@ -35,8 +42,6 @@ export class S3Provider implements StorageProvider {
   }
 
   async getPresignPostUrl(fileName: string, contentType: string, userId?: number): Promise<PresignedUrl> {
-    const { getSignedUrl } = await import('@aws-sdk/s3-request-presigner');
-
     const { name, ext } = path.parse(fileName);
 
     let slugified = slugify(name);
@@ -55,7 +60,7 @@ export class S3Provider implements StorageProvider {
       ContentType: contentType,
     });
 
-    const url = await getSignedUrl(this.client, command, { expiresIn: ONE_HOUR / ONE_SECOND });
+    const url = await getSignedUrl(this.client, command, { expiresIn: 604800 });
     return { key, url };
   }
 
