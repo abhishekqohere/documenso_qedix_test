@@ -9,7 +9,6 @@ import {
   isSignupEnabledForProvider,
   OIDC_PROVIDER_LABEL,
 } from '@documenso/lib/constants/auth';
-import { isValidReturnTo, normalizeReturnTo } from '@documenso/lib/utils/is-valid-return-to';
 import { Alert, AlertDescription } from '@documenso/ui/primitives/alert';
 import { msg } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react';
@@ -53,8 +52,6 @@ export async function loader({ request }: Route.LoaderArgs) {
     (IS_OIDC_SSO_ENABLED && isSignupEnabledForProvider('oidc'));
 
   let returnTo = new URL(request.url).searchParams.get('returnTo') ?? undefined;
-
-  returnTo = isValidReturnTo(returnTo) ? normalizeReturnTo(returnTo) : undefined;
 
   if (isAuthenticated) {
     throw redirect(returnTo || '/');
