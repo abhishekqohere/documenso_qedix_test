@@ -129,6 +129,12 @@ export const downloadRoute = new Hono<HonoEnv>()
       } catch (error) {
         logger.error(error);
 
+        // Clients poll this endpoint while the envelope is still sealing; an
+        // unexpected error mid-seal should read as "not ready yet", not a 500.
+        if (!(error instanceof AppError)) {
+          return c.json({ status: 'processing' }, 200);
+        }
+
         if (error instanceof AppError) {
           const { status, body } = AppError.toRestAPIError(error);
 
