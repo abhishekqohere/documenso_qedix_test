@@ -30,6 +30,13 @@ export const callbackRoute = new Hono<HonoAuthContext>()
     } catch (err) {
       console.error(err);
 
+      // Send the user back to the page they started the SSO flow from instead
+      // of dumping them on a raw 500.
+      const returnTo = c.req.query('returnTo');
+      if (returnTo) {
+        return c.redirect(returnTo);
+      }
+
       if (err instanceof Error) {
         throw new AppError(err.name, {
           message: err.message,
