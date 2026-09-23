@@ -2,6 +2,7 @@ import { prisma } from '@documenso/prisma';
 import { sValidator } from '@hono/standard-validator';
 import type { Prisma } from '@prisma/client';
 import { Hono } from 'hono';
+import { jwtVerify } from 'jose';
 import { z } from 'zod';
 
 import type { HonoEnv } from '../../../router';
@@ -28,6 +29,16 @@ route.get(
 
     if (!token) {
       return c.json({ error: 'Not found' }, 404);
+    }
+
+    // Signed embed links carry a short-lived JWT instead of a recipient token.
+    if (token.startsWith('jwt_')) {
+      const secret = new TextEncoder().encode(process.env.NEXT_PRIVATE_EMBED_SIGNING_SECRET ?? '');
+      const { payload } = await jwtVerify(token.slice(4), secret);
+
+      if (payload.sub !== envelopeId) {
+        return c.json({ error: 'Not found' }, 404);
+      }
     }
 
     // Recipient token based query.
