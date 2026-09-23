@@ -155,7 +155,9 @@ export class BullMQJobProvider extends BaseJobProvider {
           },
           {
             jobId: options.id,
-            attempts: DEFAULT_MAX_RETRIES,
+            // Signing/sealing jobs must eventually complete; a Redis or SMTP
+            // outage longer than our retry window was silently dropping them.
+            attempts: Number.POSITIVE_INFINITY,
             backoff: {
               type: 'exponential',
               delay: DEFAULT_BACKOFF_DELAY,
