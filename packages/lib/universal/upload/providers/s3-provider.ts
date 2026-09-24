@@ -94,7 +94,8 @@ export class S3Provider implements StorageProvider {
       Key: key,
     });
 
-    const url = await getSignedUrl(this.client, command, { expiresIn: ONE_HOUR / ONE_SECOND });
+    // Download links are shared in completion emails; keep them valid for a week.
+    const url = await getSignedUrl(this.client, command, { expiresIn: 604800 });
     return { key, url };
   }
 
