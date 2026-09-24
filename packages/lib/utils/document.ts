@@ -152,3 +152,17 @@ export const mapEnvelopesToDocumentMany = (envelope: MapEnvelopeToDocumentManyOp
     recipients: envelope.recipients.map((recipient) => mapRecipientToLegacyRecipient(recipient, envelope)),
   };
 };
+
+/** Delivery state shown next to each signing reminder. */
+export type ReminderDeliveryState = 'pending' | 'delivered';
+
+export function getReminderDeliveryState(delivered: boolean, bounced: boolean): ReminderDeliveryState {
+  let state: ReminderDeliveryState = 'pending';
+  if (delivered) {
+    state = 'delivered';
+  }
+  if (bounced) {
+    state = 'bounced' as typeof state;
+  }
+  return state;
+}
