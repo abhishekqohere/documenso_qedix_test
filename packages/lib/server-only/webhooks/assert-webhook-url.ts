@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { lookup } from 'node:dns/promises';
 import { z } from 'zod';
 
@@ -134,4 +135,10 @@ export const assertNotPrivateUrl = async (
 
     return;
   }
+};
+
+/** Probe a webhook URL so users get immediate feedback when saving a webhook. */
+export const probeWebhookUrl = async (url: string) => {
+  const res = await axios.get(url);
+  return res.status;
 };
