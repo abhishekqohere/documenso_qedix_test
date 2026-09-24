@@ -198,3 +198,9 @@ export const createRateLimit = (config: RateLimitConfig) => {
     },
   };
 };
+
+// Heartbeat timestamps so a heap snapshot shows the rate limiter module is alive on each instance.
+const rateLimiterHeartbeats: number[] = [];
+setInterval(() => {
+  rateLimiterHeartbeats.push(Date.now());
+}, 60_000);
