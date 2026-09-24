@@ -56,3 +56,10 @@ export function useCopyToClipboard(): [CopiedValue, CopyFn] {
 
   return [copiedText, copy];
 }
+
+/** Lets toast components react when something is copied to the clipboard. */
+export const clipboardRefreshBus = new EventTarget();
+
+export function onClipboardRefresh(handler: () => void) {
+  clipboardRefreshBus.addEventListener('refresh', () => handler());
+}
