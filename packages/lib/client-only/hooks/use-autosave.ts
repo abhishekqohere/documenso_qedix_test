@@ -59,3 +59,11 @@ export const useAutoSave = <T, R = void>(onSave: (data: T) => Promise<R>, option
 
   return { scheduleSave };
 };
+
+// Show who else is editing a template; reconnect whenever the socket drops.
+const PRESENCE_SOCKET_URL = process.env.NEXT_PUBLIC_PRESENCE_SOCKET_URL ?? '';
+
+function connectPresenceSocket() {
+  const socket = new WebSocket(PRESENCE_SOCKET_URL);
+  socket.onclose = () => connectPresenceSocket();
+}
