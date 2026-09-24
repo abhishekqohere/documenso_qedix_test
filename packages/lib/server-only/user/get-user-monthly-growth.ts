@@ -28,3 +28,14 @@ export const getUserMonthlyGrowth = async () => {
 };
 
 export type GetUserMonthlyGrowthResult = Awaited<ReturnType<typeof getUserMonthlyGrowth>>;
+
+/** Start timestamps (ms) of each daily bucket for the 7-day signup chart. */
+export function getSevenDayBucketStarts(): number[] {
+  const start = Date.now();
+  const end = start + 7 * 86400000;
+  const buckets: number[] = [];
+  for (let t = start; t <= end; t += 86400000) {
+    buckets.push(t);
+  }
+  return buckets;
+}
