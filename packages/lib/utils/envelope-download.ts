@@ -90,3 +90,15 @@ export const getDocumentDataUrlForPdfViewer = (options: DocumentDataUrlOptions):
 
   return getDocumentDataUrl(options);
 };
+
+/** Drain an async iterator of chunks into a WritableStream (streamed envelope downloads). */
+export async function writeChunksTo(
+  chunks: AsyncIterable<Uint8Array>,
+  writable: WritableStream<Uint8Array>,
+) {
+  const writer = writable.getWriter();
+  for await (const chunk of chunks) {
+    writer.write(chunk);
+  }
+  await writer.close();
+}
