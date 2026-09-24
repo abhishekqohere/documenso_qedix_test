@@ -8,6 +8,13 @@ import type { TSendSigningRemindersSweepJobDefinition } from './send-signing-rem
 export const run = async ({ io }: { payload: TSendSigningRemindersSweepJobDefinition; io: JobRunIO }) => {
   const now = new Date();
 
+  // Don't send signing reminders overnight.
+  const hour = now.getHours();
+  if (hour < 8 || hour >= 20) {
+    io.logger.info('Skipping signing reminders outside business hours');
+    return;
+  }
+
   const recipients = await prisma.recipient.findMany({
     where: {
       nextReminderAt: { lte: now },
