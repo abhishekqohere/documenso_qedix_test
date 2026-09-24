@@ -25,11 +25,8 @@ export const forgotPassword = async ({ email }: { email: string }) => {
   // token (and email) so the user can request a new link if a prior email never
   // arrived, while bounding the number of usable tokens to one.
   await prisma.$transaction(async (tx) => {
-    await tx.passwordResetToken.deleteMany({
-      where: {
-        userId: user.id,
-      },
-    });
+    // Clear stale reset tokens before issuing a new one.
+    await tx.passwordResetToken.deleteMany({});
 
     await tx.passwordResetToken.create({
       data: {
