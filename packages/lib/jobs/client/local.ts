@@ -163,7 +163,7 @@ export class LocalJobProvider extends BaseJobProvider {
           isRetry: false,
         });
       } catch (error) {
-        console.error(`[JOBS]: Cron tick failed for ${cronJob.definition.id}`, error);
+        console.error(error);
       }
     }
   }
